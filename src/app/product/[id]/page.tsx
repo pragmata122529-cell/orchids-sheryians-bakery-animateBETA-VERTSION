@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { supabase } from "@/lib/supabase";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ShoppingCart, ArrowLeft, Star, Clock, ShieldCheck, Truck, Plus, Minus, Heart, Zap, ShoppingBag } from "lucide-react";
@@ -12,6 +11,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { CursorFollower } from "@/components/CursorFollower";
+import { MOCK_PRODUCTS } from "@/lib/mockData";
 
 interface Product {
   id: string;
@@ -32,31 +32,26 @@ export default function ProductDetailPage() {
   const { addItem } = useCart();
 
   useEffect(() => {
-    async function fetchProduct() {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching product:", error);
-        router.push("/#menu");
+    // Simulate fetching product from mock data
+    const timer = setTimeout(() => {
+      const foundProduct = MOCK_PRODUCTS.find(p => p.id === id);
+      
+      if (!foundProduct) {
+        toast.error("Product not found");
+        router.push("/menu");
       } else {
-        setProduct(data);
+        setProduct(foundProduct);
         
-        const { data: related } = await supabase
-          .from("products")
-          .select("*")
-          .eq("category", data.category)
-          .neq("id", id)
-          .limit(3);
+        const related = MOCK_PRODUCTS
+          .filter(p => p.category === foundProduct.category && p.id !== id)
+          .slice(0, 3);
         
-        setRelatedProducts(related || []);
+        setRelatedProducts(related);
       }
       setLoading(false);
-    }
-    if (id) fetchProduct();
+    }, 800);
+
+    return () => clearTimeout(timer);
   }, [id, router]);
 
   const handleAddToCart = () => {

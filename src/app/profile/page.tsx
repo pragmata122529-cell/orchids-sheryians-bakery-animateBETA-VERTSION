@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "@/lib/supabase";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { 
@@ -30,28 +29,38 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
-    async function getProfile() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-        return;
-      }
-      setUser(user);
-
-      const { data: ordersData } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+    // Simulate fetching profile and orders
+    const timer = setTimeout(() => {
+      setUser({
+        email: "guest@example.com",
+        user_metadata: {
+          full_name: "Bakery Lover",
+          avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=guest"
+        }
+      });
       
-      setOrders(ordersData || []);
+      setOrders([
+        {
+          id: "order_12345678",
+          total_amount: 75.50,
+          status: "preparing",
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "order_87654321",
+          total_amount: 42.00,
+          status: "delivered",
+          created_at: new Date(Date.now() - 86400000).toISOString(),
+        }
+      ]);
       setLoading(false);
-    }
-    getProfile();
-  }, [router]);
+    }, 1000);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSignOut = () => {
+    setUser(null);
     router.push("/");
     toast.success("Signed out successfully");
   };
@@ -139,8 +148,8 @@ export default function ProfilePage() {
                   <div className="grid grid-cols-3 gap-4 mt-8">
                     {[
                       { value: orders.length, label: "Orders" },
-                      { value: 0, label: "Points" },
-                      { value: 0, label: "Reviews" },
+                      { value: 150, label: "Points" },
+                      { value: 12, label: "Reviews" },
                     ].map((stat, i) => (
                       <motion.div 
                         key={i}
@@ -181,7 +190,7 @@ export default function ProfilePage() {
                         <item.icon size={20} />
                         <span className="font-bold uppercase tracking-wider text-sm">{item.label}</span>
                       </div>
-                      <ChevronRight size={16} />
+                      <span className="text-muted-foreground/30"><ChevronRight size={16} /></span>
                     </motion.button>
                   ))}
                   
@@ -273,7 +282,7 @@ export default function ProfilePage() {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => router.push("/#menu")} 
+                        onClick={() => router.push("/menu")} 
                         className="mt-6 px-8 py-4 bg-gradient-to-r from-primary to-caramel text-primary-foreground font-black uppercase tracking-wider shadow-xl"
                         style={{ clipPath: "polygon(5% 0, 100% 0, 95% 100%, 0 100%)" }}
                       >
@@ -281,7 +290,7 @@ export default function ProfilePage() {
                       </motion.button>
                     </motion.div>
                   ) : (
-                    orders.slice(0, 3).map((order, i) => (
+                    orders.map((order, i) => (
                       <motion.div
                         key={order.id}
                         initial={{ opacity: 0, x: 30 }}
@@ -302,9 +311,7 @@ export default function ProfilePage() {
                           <div className="flex items-center gap-3 mb-1">
                             <span className="text-xs font-mono text-muted-foreground">#{order.id.slice(0, 8).toUpperCase()}</span>
                             <span className={`px-3 py-1 text-[10px] font-black uppercase ${
-                              order.status === "pending" ? "bg-amber-500/10 text-amber-500" :
-                              order.status === "delivered" ? "bg-green-500/10 text-green-500" :
-                              "bg-primary/10 text-primary"
+                              order.status === "delivered" ? "bg-green-500/10 text-green-500" : "bg-primary/10 text-primary"
                             }`}
                             style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0 100%)" }}
                             >

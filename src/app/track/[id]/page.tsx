@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, Phone, Clock, CheckCircle2, Truck, Package, ChefHat, Navigation } from "lucide-react";
+import { ArrowLeft, MapPin, Phone, Clock, CheckCircle2, Truck, Package, ChefHat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
+import { MOCK_PRODUCTS } from "@/lib/mockData";
 
 interface Order {
   id: string;
@@ -49,87 +49,54 @@ export default function TrackOrderPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [driverPosition, setDriverPosition] = useState({ lat: 0, lng: 0 });
-
-  const fetchOrder = useCallback(async () => {
-    const { data: orderData, error } = await supabase
-      .from("orders")
-      .select("*")
-      .eq("id", orderId)
-      .single();
-
-    if (error || !orderData) {
-      setLoading(false);
-      return;
-    }
-
-    setOrder(orderData);
-    setDriverPosition({
-      lat: orderData.driver_lat || orderData.delivery_lat - 0.01,
-      lng: orderData.driver_lng || orderData.delivery_lng - 0.01,
-    });
-
-    const { data: items } = await supabase
-      .from("order_items")
-      .select(`
-        id,
-        quantity,
-        price,
-        product:products(name, image_url)
-      `)
-      .eq("order_id", orderId);
-
-    setOrderItems(items as any || []);
-    setLoading(false);
-  }, [orderId]);
 
   useEffect(() => {
-    fetchOrder();
+    // Simulate API fetch
+    const timer = setTimeout(() => {
+      const mockOrder: Order = {
+        id: orderId,
+        total_amount: 75.50,
+        status: "preparing",
+        created_at: new Date().toISOString(),
+        customer_name: "John Doe",
+        customer_email: "john@example.com",
+        customer_phone: "+1 234 567 890",
+        delivery_address: "123 Baker Street, London",
+        delivery_lat: 51.5237,
+        delivery_lng: -0.1585,
+        driver_lat: 51.5200,
+        driver_lng: -0.1600,
+        estimated_delivery: new Date(Date.now() + 30 * 60000).toISOString(),
+      };
 
-    const channel = supabase
-      .channel(`order-${orderId}`)
-      .on(
-        "postgres_changes",
+      const mockItems: OrderItem[] = [
         {
-          event: "UPDATE",
-          schema: "public",
-          table: "orders",
-          filter: `id=eq.${orderId}`,
+          id: "1",
+          quantity: 1,
+          price: 45,
+          product: {
+            name: MOCK_PRODUCTS[0].name,
+            image_url: MOCK_PRODUCTS[0].image_url,
+          },
         },
-        (payload) => {
-          setOrder(payload.new as Order);
-          if (payload.new.driver_lat && payload.new.driver_lng) {
-            setDriverPosition({
-              lat: payload.new.driver_lat,
-              lng: payload.new.driver_lng,
-            });
-          }
-        }
-      )
-      .subscribe();
+        {
+          id: "2",
+          quantity: 2,
+          price: 15.25,
+          product: {
+            name: MOCK_PRODUCTS[1].name,
+            image_url: MOCK_PRODUCTS[1].image_url,
+          },
+        },
+      ];
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [orderId, fetchOrder]);
+      setOrder(mockOrder);
+      setOrderItems(mockItems);
+      setLoading(false);
+    }, 1000);
 
-  useEffect(() => {
-    if (!order || order.status === "delivered" || order.status === "pending") return;
-
-    const interval = setInterval(() => {
-      setDriverPosition((prev) => {
-        const targetLat = order.delivery_lat || 40.7128;
-        const targetLng = order.delivery_lng || -74.006;
-        
-        const newLat = prev.lat + (targetLat - prev.lat) * 0.05;
-        const newLng = prev.lng + (targetLng - prev.lng) * 0.05;
-        
-        return { lat: newLat, lng: newLng };
-      });
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [order]);
+    return () => clearTimeout(timer);
+  }, [orderId]);
 
   const getCurrentStepIndex = () => {
     if (!order) return 0;

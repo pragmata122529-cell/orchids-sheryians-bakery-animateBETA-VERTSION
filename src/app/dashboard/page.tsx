@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Package, Clock, MapPin, Phone, ChevronRight, Truck, CheckCircle2, CircleDot } from "lucide-react";
+import { ArrowLeft, Package, Clock, MapPin, ChevronRight, Truck, CheckCircle2, CircleDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 
 interface Order {
@@ -19,32 +17,40 @@ interface Order {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/");
-        return;
-      }
-      setUser(user);
+    // Simulate user check and order fetching
+    const timer = setTimeout(() => {
+      setUser({ email: "guest@example.com" });
       
-      const { data: ordersData } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+      const mockOrders: Order[] = [
+        {
+          id: "order_12345678",
+          total_amount: 75.50,
+          status: "preparing",
+          created_at: new Date().toISOString(),
+          customer_name: "John Doe",
+          delivery_address: "123 Baker Street, London",
+        },
+        {
+          id: "order_87654321",
+          total_amount: 42.00,
+          status: "delivered",
+          created_at: new Date(Date.now() - 86400000).toISOString(),
+          customer_name: "John Doe",
+          delivery_address: "123 Baker Street, London",
+        }
+      ];
       
-      setOrders(ordersData || []);
+      setOrders(mockOrders);
       setLoading(false);
-    };
-    
-    checkUser();
-  }, [router]);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -120,7 +126,7 @@ export default function DashboardPage() {
             </div>
             <h3 className="text-xl font-medium text-foreground mb-2">No orders yet</h3>
             <p className="text-muted-foreground mb-6">Start shopping and your orders will appear here</p>
-            <Link href="/#menu">
+            <Link href="/menu">
               <Button className="rounded-full bg-primary text-primary-foreground px-8">
                 Browse Menu
               </Button>
