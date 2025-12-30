@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { ArrowRight, ChevronDown, Sparkles, ShoppingBag, Gift, Star } from "lucide-react";
@@ -43,51 +43,74 @@ const GlitchText = ({ children, delay = 0 }: { children: string; delay?: number 
   );
 };
 
-const ChocolateDripButton = ({ 
-  children, 
-  href,
-  variant = "primary"
-}: { 
-  children: React.ReactNode; 
-  href: string;
-  variant?: "primary" | "outline";
-}) => {
-  return (
-    <Link href={href}>
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={`relative group overflow-visible h-16 px-10 text-lg font-bold transition-all duration-300 ${
-          variant === "primary" 
-            ? "bg-gradient-to-r from-primary via-caramel to-primary text-primary-foreground shadow-2xl shadow-primary/40" 
-            : "bg-transparent border-2 border-primary/50 text-foreground hover:border-primary"
-        }`}
-        style={{
-          clipPath: "polygon(8% 0, 100% 0, 100% 70%, 92% 100%, 0 100%, 0 30%)"
-        }}
-      >
-        <motion.div
-          className="absolute -top-3 left-1/4 w-8 h-6 bg-chocolate-dark rounded-b-full opacity-0 group-hover:opacity-100"
-          initial={{ y: -20 }}
-          whileHover={{ y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        />
-        <motion.div
-          className="absolute -top-3 left-1/2 w-6 h-8 bg-chocolate rounded-b-full opacity-0 group-hover:opacity-100"
-          initial={{ y: -20 }}
-          whileHover={{ y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-        />
-        <motion.div
-          className="absolute -top-3 right-1/4 w-5 h-5 bg-chocolate-light rounded-b-full opacity-0 group-hover:opacity-100"
-          initial={{ y: -20 }}
-          whileHover={{ y: 0 }}
-          transition={{ duration: 0.3, ease: "easeOut", delay: 0.2 }}
-        />
-        
-        <span className="relative z-10 flex items-center gap-3">
-          {children}
-        </span>
+  const ChocolateDripButton = ({ 
+    children, 
+    href,
+    variant = "primary"
+  }: { 
+    children: React.ReactNode; 
+    href: string;
+    variant?: "primary" | "outline";
+  }) => {
+    return (
+      <Link href={href}>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className={`relative group overflow-visible h-16 px-10 text-lg font-bold transition-all duration-300 ${
+            variant === "primary" 
+              ? "bg-gradient-to-r from-primary via-caramel to-primary text-primary-foreground shadow-2xl shadow-primary/40" 
+              : "bg-transparent border-2 border-primary/50 text-foreground hover:border-primary"
+          }`}
+          style={{
+            clipPath: "polygon(8% 0, 100% 0, 100% 70%, 92% 100%, 0 100%, 0 30%)"
+          }}
+        >
+          {/* Falling chocolate drips */}
+          <div className="absolute inset-x-0 -top-4 h-20 overflow-hidden pointer-events-none">
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-8 bg-chocolate rounded-full"
+                style={{ left: `${15 + i * 15}%` }}
+                initial={{ y: -40, opacity: 0 }}
+                whileHover={{ 
+                  y: [null, 60],
+                  opacity: [0, 1, 0],
+                  scaleY: [1, 2, 1]
+                }}
+                transition={{ 
+                  duration: 0.8 + Math.random() * 0.4, 
+                  repeat: Infinity,
+                  repeatDelay: Math.random() * 0.5,
+                  ease: "easeIn"
+                }}
+              />
+            ))}
+          </div>
+
+          <motion.div
+            className="absolute -top-3 left-1/4 w-8 h-10 bg-chocolate-dark rounded-b-full opacity-0 group-hover:opacity-100"
+            initial={{ height: 0 }}
+            whileHover={{ height: 24 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute -top-3 left-1/2 w-6 h-12 bg-chocolate rounded-b-full opacity-0 group-hover:opacity-100"
+            initial={{ height: 0 }}
+            whileHover={{ height: 32 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+          />
+          <motion.div
+            className="absolute -top-3 right-1/4 w-5 h-8 bg-chocolate-light rounded-b-full opacity-0 group-hover:opacity-100"
+            initial={{ height: 0 }}
+            whileHover={{ height: 20 }}
+            transition={{ duration: 0.3, ease: "easeOut", delay: 0.2 }}
+          />
+          
+          <span className="relative z-10 flex items-center gap-3">
+            {children}
+          </span>
         
         {variant === "primary" && (
           <motion.div
