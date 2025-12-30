@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { supabase } from "@/lib/supabase";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ShoppingCart, ArrowLeft, Star, Clock, ShieldCheck, Truck, Plus, Minus, Heart, Zap, ShoppingBag } from "lucide-react";
@@ -11,7 +12,15 @@ import Link from "next/link";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { CursorFollower } from "@/components/CursorFollower";
-import { MOCK_PRODUCTS, Product } from "@/lib/mockData";
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+  category: string;
+}
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -23,20 +32,27 @@ export default function ProductDetailPage() {
   const { addItem } = useCart();
 
   useEffect(() => {
-    function fetchProduct() {
-      const foundProduct = MOCK_PRODUCTS.find(p => p.id === id);
+    async function fetchProduct() {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-      if (!foundProduct) {
-        console.error("Product not found");
+      if (error) {
+        console.error("Error fetching product:", error);
         router.push("/#menu");
       } else {
-        setProduct(foundProduct);
+        setProduct(data);
         
-        const related = MOCK_PRODUCTS.filter(
-          p => p.category === foundProduct.category && p.id !== id
-        ).slice(0, 3);
+        const { data: related } = await supabase
+          .from("products")
+          .select("*")
+          .eq("category", data.category)
+          .neq("id", id)
+          .limit(3);
         
-        setRelatedProducts(related);
+        setRelatedProducts(related || []);
       }
       setLoading(false);
     }

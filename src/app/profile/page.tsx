@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { supabase } from "@/lib/supabase";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { 
-  User as UserIcon, 
+  User, 
   Package, 
   MapPin, 
   Settings, 
@@ -29,38 +30,30 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
-    // Mock profile and orders data
-    setUser({
-      id: "mock-user-123",
-      email: "bakery@example.com",
-      user_metadata: {
-        full_name: "Bakery Lover",
-        avatar_url: null
+    async function getProfile() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/auth");
+        return;
       }
-    });
+      setUser(user);
 
-    const mockOrders = [
-      {
-        id: "order-1",
-        total_amount: 45.00,
-        status: "delivered",
-        created_at: new Date(Date.now() - 86400000).toISOString()
-      },
-      {
-        id: "order-2",
-        total_amount: 24.50,
-        status: "preparing",
-        created_at: new Date().toISOString()
-      }
-    ];
-    
-    setOrders(mockOrders);
-    setLoading(false);
+      const { data: ordersData } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      
+      setOrders(ordersData || []);
+      setLoading(false);
+    }
+    getProfile();
   }, [router]);
 
   const handleSignOut = async () => {
-    toast.success("Signed out successfully");
+    await supabase.auth.signOut();
     router.push("/");
+    toast.success("Signed out successfully");
   };
 
   if (loading) {
@@ -166,7 +159,7 @@ export default function ProfilePage() {
 
                 <div className="border-t border-primary/10 p-4 space-y-2">
                   {[
-                    { icon: UserIcon, label: "Edit Profile", active: true },
+                    { icon: User, label: "Edit Profile", active: true },
                     { icon: MapPin, label: "Saved Addresses" },
                     { icon: Heart, label: "My Favorites" },
                     { icon: Settings, label: "Settings" },

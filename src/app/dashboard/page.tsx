@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Package, Clock, MapPin, ChevronRight, Truck, CheckCircle2, CircleDot } from "lucide-react";
+import { ArrowLeft, Package, Clock, MapPin, Phone, ChevronRight, Truck, CheckCircle2, CircleDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 
@@ -24,30 +25,25 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock user and orders data
-    setUser({ id: "mock-user-123", email: "bakery@example.com" });
-    
-    const mockOrders: Order[] = [
-      {
-        id: "order-1",
-        total_amount: 45.00,
-        status: "delivered",
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-        customer_name: "Bakery Lover",
-        delivery_address: "123 Sweet Street, Dessert City"
-      },
-      {
-        id: "order-2",
-        total_amount: 24.50,
-        status: "preparing",
-        created_at: new Date().toISOString(),
-        customer_name: "Bakery Lover",
-        delivery_address: "123 Sweet Street, Dessert City"
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/");
+        return;
       }
-    ];
+      setUser(user);
+      
+      const { data: ordersData } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      
+      setOrders(ordersData || []);
+      setLoading(false);
+    };
     
-    setOrders(mockOrders);
-    setLoading(false);
+    checkUser();
   }, [router]);
 
   const getStatusIcon = (status: string) => {

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "@/lib/store";
 import Link from "next/link";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -29,12 +30,12 @@ export default function CheckoutPage() {
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   useEffect(() => {
-    // Mock user data
-    setUser({
-      id: "mock-user-123",
-      email: "bakery@example.com"
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+      if (user?.email) {
+        setFormData(prev => ({ ...prev, email: user.email || "" }));
+      }
     });
-    setFormData(prev => ({ ...prev, email: "bakery@example.com" }));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,11 +48,38 @@ export default function CheckoutPage() {
     setLoading(true);
     
     try {
-      // Mock order creation delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const mockId = Math.random().toString(36).substring(2, 15);
-      setOrderId(mockId);
+      const { data: order, error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          user_id: user?.id || null,
+          total_amount: totalPrice,
+          status: "pending",
+          customer_name: formData.name,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          delivery_address: formData.address,
+          delivery_lat: 40.7128 + (Math.random() - 0.5) * 0.1,
+          delivery_lng: -74.0060 + (Math.random() - 0.5) * 0.1,
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      const orderItems = items.map(item => ({
+        order_id: order.id,
+        product_id: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from("order_items")
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      setOrderId(order.id);
       setOrderComplete(true);
       clearCart();
       toast.success("Order placed successfully!");
