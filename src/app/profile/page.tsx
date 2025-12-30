@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { 
-  User, 
+  User as UserIcon, 
   Package, 
   MapPin, 
   Settings, 
@@ -29,40 +29,38 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
-    // Simulate fetching profile and orders
-    const timer = setTimeout(() => {
-      setUser({
-        email: "guest@example.com",
-        user_metadata: {
-          full_name: "Bakery Lover",
-          avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=guest"
-        }
-      });
-      
-      setOrders([
-        {
-          id: "order_12345678",
-          total_amount: 75.50,
-          status: "preparing",
-          created_at: new Date().toISOString(),
-        },
-        {
-          id: "order_87654321",
-          total_amount: 42.00,
-          status: "delivered",
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-        }
-      ]);
-      setLoading(false);
-    }, 1000);
+    // Mock profile and orders data
+    setUser({
+      id: "mock-user-123",
+      email: "bakery@example.com",
+      user_metadata: {
+        full_name: "Bakery Lover",
+        avatar_url: null
+      }
+    });
 
-    return () => clearTimeout(timer);
-  }, []);
+    const mockOrders = [
+      {
+        id: "order-1",
+        total_amount: 45.00,
+        status: "delivered",
+        created_at: new Date(Date.now() - 86400000).toISOString()
+      },
+      {
+        id: "order-2",
+        total_amount: 24.50,
+        status: "preparing",
+        created_at: new Date().toISOString()
+      }
+    ];
+    
+    setOrders(mockOrders);
+    setLoading(false);
+  }, [router]);
 
-  const handleSignOut = () => {
-    setUser(null);
-    router.push("/");
+  const handleSignOut = async () => {
     toast.success("Signed out successfully");
+    router.push("/");
   };
 
   if (loading) {
@@ -148,8 +146,8 @@ export default function ProfilePage() {
                   <div className="grid grid-cols-3 gap-4 mt-8">
                     {[
                       { value: orders.length, label: "Orders" },
-                      { value: 150, label: "Points" },
-                      { value: 12, label: "Reviews" },
+                      { value: 0, label: "Points" },
+                      { value: 0, label: "Reviews" },
                     ].map((stat, i) => (
                       <motion.div 
                         key={i}
@@ -168,7 +166,7 @@ export default function ProfilePage() {
 
                 <div className="border-t border-primary/10 p-4 space-y-2">
                   {[
-                    { icon: User, label: "Edit Profile", active: true },
+                    { icon: UserIcon, label: "Edit Profile", active: true },
                     { icon: MapPin, label: "Saved Addresses" },
                     { icon: Heart, label: "My Favorites" },
                     { icon: Settings, label: "Settings" },
@@ -190,7 +188,7 @@ export default function ProfilePage() {
                         <item.icon size={20} />
                         <span className="font-bold uppercase tracking-wider text-sm">{item.label}</span>
                       </div>
-                      <span className="text-muted-foreground/30"><ChevronRight size={16} /></span>
+                      <ChevronRight size={16} />
                     </motion.button>
                   ))}
                   
@@ -282,7 +280,7 @@ export default function ProfilePage() {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => router.push("/menu")} 
+                        onClick={() => router.push("/#menu")} 
                         className="mt-6 px-8 py-4 bg-gradient-to-r from-primary to-caramel text-primary-foreground font-black uppercase tracking-wider shadow-xl"
                         style={{ clipPath: "polygon(5% 0, 100% 0, 95% 100%, 0 100%)" }}
                       >
@@ -290,7 +288,7 @@ export default function ProfilePage() {
                       </motion.button>
                     </motion.div>
                   ) : (
-                    orders.map((order, i) => (
+                    orders.slice(0, 3).map((order, i) => (
                       <motion.div
                         key={order.id}
                         initial={{ opacity: 0, x: 30 }}
@@ -311,7 +309,9 @@ export default function ProfilePage() {
                           <div className="flex items-center gap-3 mb-1">
                             <span className="text-xs font-mono text-muted-foreground">#{order.id.slice(0, 8).toUpperCase()}</span>
                             <span className={`px-3 py-1 text-[10px] font-black uppercase ${
-                              order.status === "delivered" ? "bg-green-500/10 text-green-500" : "bg-primary/10 text-primary"
+                              order.status === "pending" ? "bg-amber-500/10 text-amber-500" :
+                              order.status === "delivered" ? "bg-green-500/10 text-green-500" :
+                              "bg-primary/10 text-primary"
                             }`}
                             style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0 100%)" }}
                             >

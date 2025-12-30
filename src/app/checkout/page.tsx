@@ -29,9 +29,12 @@ export default function CheckoutPage() {
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   useEffect(() => {
-    // Simulate user fetch
-    setUser({ email: "guest@example.com" });
-    setFormData(prev => ({ ...prev, email: "guest@example.com" }));
+    // Mock user data
+    setUser({
+      id: "mock-user-123",
+      email: "bakery@example.com"
+    });
+    setFormData(prev => ({ ...prev, email: "bakery@example.com" }));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,15 +46,20 @@ export default function CheckoutPage() {
     
     setLoading(true);
     
-    // Simulate order submission
-    setTimeout(() => {
-      const mockOrderId = "order_" + Math.random().toString(36).substring(2, 10);
-      setOrderId(mockOrderId);
+    try {
+      // Mock order creation delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const mockId = Math.random().toString(36).substring(2, 15);
+      setOrderId(mockId);
       setOrderComplete(true);
       clearCart();
       toast.success("Order placed successfully!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to place order");
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   if (orderComplete && orderId) {
@@ -82,7 +90,7 @@ export default function CheckoutPage() {
 
           <div className="p-4 rounded-2xl bg-card border border-primary/10">
             <p className="text-sm text-muted-foreground">Order ID</p>
-            <p className="font-mono text-foreground">{orderId.slice(0, 14).toUpperCase()}</p>
+            <p className="font-mono text-foreground">{orderId.slice(0, 8).toUpperCase()}</p>
           </div>
 
           <div className="flex flex-col gap-3">

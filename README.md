@@ -1,83 +1,71 @@
-# 🥐 Artisan Bakery - Premium Frontend Experience
+# 🍰 Home Bakery - Artisan Frontend Mockup
 
-A high-end, immersive e-commerce frontend for an artisan bakery, meticulously crafted with **Next.js 15**, **Tailwind CSS**, and **Framer Motion**. This project focuses on high-performance animations, premium aesthetics, and a clean architecture ready for **FastAPI** integration.
+A premium, high-performance artisan bakery frontend built with Next.js, Framer Motion, and Tailwind CSS. This project is currently configured as a **pure frontend mockup** using centralized mock data, designed to be easily integrated with a custom FastAPI backend.
 
----
-
-## 🚀 Quick Start
-
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-2. **Run development server:**
-   ```bash
-   npm run dev
-   ```
-3. **Build for production:**
-   ```bash
-   npm run build
-   ```
+## 🚀 Vision
+The goal of this project is to provide a world-class user experience for a local bakery, featuring smooth animations, interactive menus, and a robust order tracking system. It follows a "Bento-grid" and "Clean-Industrial" aesthetic with a warm chocolate-caramel palette.
 
 ---
 
-## 🗺️ Project Map & Features
-
-### 1. Home Page (`/`)
-The landing experience designed to convert visitors through visual storytelling.
-- **Hero Section:** High-impact entrance with animated typography and primary CTA.
-- **Specialties Section:** Showcases top-tier products with 3D-effect hover cards.
-- **About Section:** Brand narrative with staggered image reveals.
-- **Marquee Tickers:** Dynamic text scrolls for "Fresh Daily" and "Same Day Delivery".
-- **Reviews:** Social proof carousel with animated entry.
-
-### 2. Menu & Exploration (`/menu`)
-The central hub for product discovery.
-- **Real-time Search:** Instantly filters products as the user types.
-- **Category Filtering:** Quick-toggle filters for Cakes, Pastries, Cookies, etc.
-- **Animated Grid:** Products use `AnimatePresence` for smooth layout transitions when filtering.
-
-### 3. Product Details (`/product/[id]`)
-In-depth view for individual items.
-- **Image Gallery:** Premium presentation of bakery items.
-- **Interactive Cart:** Add-to-cart functionality with immediate feedback.
-- **Specifications:** Details on ingredients and dietary info.
-
-### 4. Shopping & Checkout (`/checkout`)
-The conversion funnel.
-- **Cart Sidebar:** Accessible from any page via the Animated Navbar.
-- **Progressive Checkout:** Clean, distraction-free flow for order details.
-- **State Management:** Powered by `Zustand` for persistent, performant cart data.
-
-### 5. User Management & Tracking (Mocked)
-- **Dashboard (`/dashboard`):** Visual summary of recent orders and account activity.
-- **Profile (`/profile`):** User settings and contact information.
-- **Order Tracking (`/track/[id]`):** Real-time status UI for pending deliveries.
+## 🛠️ Tech Stack
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **State Management**: Zustand (for Shopping Cart)
+- **Components**: Radix UI / Shadcn UI
+- **Typography**: Cormorant Garamond (Serif) & Inter (Sans)
 
 ---
 
-## 🎨 Design System & Animations
-
-### High-End Aesthetics
-- **Typography:** Uses `Cormorant Garamond` for an elegant, artisanal feel and `Geist` for modern readability.
-- **Color Palette:** Deep chocolates, warm caramels, and soft creams defined in `tailwind.config.ts`.
-- **Visual Edits:** Enabled for real-time UI tweaking.
-
-### Motion Principles
-- **Navbar:** Staggered link animations on load and a scroll-linked progress bar.
-- **Cursor Follower:** Custom SVG-based interaction that follows the user's movement.
-- **Preloader:** Sophisticated loading sequence to ensure assets are ready.
-- **Scroll Reveals:** Intersection Observer-based triggers for smooth content entry.
+## 📂 Project Structure
+```text
+src/
+├── app/                  # Next.js App Router pages
+│   ├── checkout/         # Order placement & summary
+│   ├── dashboard/        # User order history
+│   ├── menu/             # Searchable product catalog
+│   ├── product/[id]/     # Dynamic product details
+│   ├── profile/          # User account management
+│   └── track/[id]/       # Real-time order tracking simulation
+├── components/           # Reusable UI components
+│   ├── Navbar/           # Animated global navigation
+│   ├── Hero/             # Immersive home page banner
+│   └── ...               # Sections: About, Specialties, Reviews, etc.
+├── lib/
+│   ├── mockData.ts       # Centralized source of truth for items/reviews
+│   └── store.ts          # Zustand cart logic
+└── hooks/                # Custom React hooks
+```
 
 ---
 
-## 🛠️ FastAPI Integration Guide
+## 🔧 Backend Integration Guide (FastAPI)
 
-The project currently uses **Mock Data** (`src/lib/mockData.ts`) to simulate a backend. To integrate FastAPI, follow these requirements:
+To transition this project from a mockup to a live application, you should implement the following in your FastAPI backend:
 
-### Data Models (Pydantic)
+### 1. Database Schema (PostgreSQL Recommended)
+- **Products**: `id (UUID)`, `name`, `description`, `price`, `image_url`, `category`.
+- **Users**: `id (UUID)`, `email`, `full_name`, `avatar_url`.
+- **Orders**: `id (UUID)`, `user_id`, `total_amount`, `status` (pending, preparing, in_transit, delivered), `delivery_address`, `customer_phone`, `created_at`.
+- **Order Items**: `id`, `order_id`, `product_id`, `quantity`, `price`.
+
+### 2. Suggested API Endpoints
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/products` | Fetch all products for the Menu page |
+| `GET` | `/api/products/{id}` | Fetch specific product details |
+| `POST` | `/api/orders` | Create a new order (from Checkout page) |
+| `GET` | `/api/orders/{id}` | Fetch order status for Tracking |
+| `GET` | `/api/users/profile` | Fetch logged-in user details |
+| `GET` | `/api/users/orders` | Fetch user's order history |
+
+### 3. Pydantic Model Example
 ```python
-class Product(BaseModel):
+from pydantic import BaseModel
+from typing import List, Optional
+
+class ProductSchema(BaseModel):
     id: str
     name: str
     description: str
@@ -85,36 +73,36 @@ class Product(BaseModel):
     image_url: str
     category: str
 
-class Review(BaseModel):
-    id: str
-    rating: int
-    comment: str
-    user_name: str
-    created_at: datetime
+class OrderCreate(BaseModel):
+    name: str
+    email: str
+    phone: str
+    address: str
+    items: List[dict] # {product_id: str, quantity: int}
 ```
 
-### Required API Endpoints
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/products` | Retrieve all bakery items |
-| `GET` | `/api/products/{id}` | Single product details |
-| `GET` | `/api/reviews` | Fetch customer testimonials |
-| `POST` | `/api/orders` | Submit new checkout data |
-| `GET` | `/api/orders/{id}` | Track order status |
-| `POST` | `/api/auth/login` | JWT Authentication |
+---
 
-### Environment Setup
-Replace the mock logic in `src/lib/hooks/` with `fetch` or `axios` calls pointing to your FastAPI URL.
+## 🎨 Design Features
+- **Fluid Navigation**: Staggered link entry animations and scroll-based progress bar.
+- **Micro-interactions**: Hover-triggered scale effects, custom cursor following, and magnetic buttons.
+- **Adaptive Layout**: Fully responsive from mobile devices to ultra-wide monitors.
+- **Glassmorphism**: Elegant card designs with backdrop-blur and subtle borders.
 
 ---
 
-## 🏗️ Architecture Details
-
-- **Components:** Modular, reusable UI elements in `src/components/`.
-- **Hooks:** Custom logic for cart management and data fetching in `src/hooks/`.
-- **Lib:** Centralized utilities, mock data, and store definitions in `src/lib/`.
-- **Global Styles:** Tailwind configurations and custom CSS variables in `src/app/globals.css`.
+## 📦 Deployment on Vercel
+1. Fork the repository.
+2. Push your changes.
+3. Vercel will automatically detect the Next.js project and deploy it.
+4. **Note**: No environment variables are required for the mockup version as it uses static mock data.
 
 ---
 
-*Handcrafted with ❤️ for the finest bakeries.*
+## 📝 Developer Notes
+- **Supabase Removed**: All Supabase dependencies and logic have been purged to ensure a clean slate for FastAPI.
+- **Mock Data**: Edit `src/lib/mockData.ts` to update the products or reviews displayed in the mockup.
+- **Real-time Tracking**: The `/track` page uses a simulation loop to move the "driver" icon. In production, this should be replaced with WebSocket or Long-Polling updates from your backend.
+
+---
+*Crafted with 🍰 by Orchids*

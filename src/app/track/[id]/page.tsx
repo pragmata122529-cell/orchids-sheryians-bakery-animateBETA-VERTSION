@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, Phone, Clock, CheckCircle2, Truck, Package, ChefHat } from "lucide-react";
+import { ArrowLeft, MapPin, Phone, Clock, CheckCircle2, Truck, Package, ChefHat, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
-import { MOCK_PRODUCTS } from "@/lib/mockData";
 
 interface Order {
   id: string;
@@ -49,54 +48,64 @@ export default function TrackOrderPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [driverPosition, setDriverPosition] = useState({ lat: 0, lng: 0 });
 
   useEffect(() => {
-    // Simulate API fetch
-    const timer = setTimeout(() => {
-      const mockOrder: Order = {
-        id: orderId,
-        total_amount: 75.50,
-        status: "preparing",
-        created_at: new Date().toISOString(),
-        customer_name: "John Doe",
-        customer_email: "john@example.com",
-        customer_phone: "+1 234 567 890",
-        delivery_address: "123 Baker Street, London",
-        delivery_lat: 51.5237,
-        delivery_lng: -0.1585,
-        driver_lat: 51.5200,
-        driver_lng: -0.1600,
-        estimated_delivery: new Date(Date.now() + 30 * 60000).toISOString(),
-      };
+    // Mock order tracking data
+    const mockOrder: Order = {
+      id: orderId,
+      total_amount: 45.00,
+      status: "preparing",
+      created_at: new Date().toISOString(),
+      customer_name: "Bakery Lover",
+      customer_email: "bakery@example.com",
+      customer_phone: "+1 234 567 890",
+      delivery_address: "123 Sweet Street, Dessert City",
+      delivery_lat: 40.7128,
+      delivery_lng: -74.006,
+      driver_lat: 40.7028,
+      driver_lng: -74.016,
+      estimated_delivery: new Date(Date.now() + 1800000).toISOString()
+    };
 
-      const mockItems: OrderItem[] = [
-        {
-          id: "1",
-          quantity: 1,
-          price: 45,
-          product: {
-            name: MOCK_PRODUCTS[0].name,
-            image_url: MOCK_PRODUCTS[0].image_url,
-          },
-        },
-        {
-          id: "2",
-          quantity: 2,
-          price: 15.25,
-          product: {
-            name: MOCK_PRODUCTS[1].name,
-            image_url: MOCK_PRODUCTS[1].image_url,
-          },
-        },
-      ];
+    const mockItems: OrderItem[] = [
+      {
+        id: "item-1",
+        quantity: 1,
+        price: 45.00,
+        product: {
+          name: "Dark Chocolate Truffle Cake",
+          image_url: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1000&auto=format&fit=crop"
+        }
+      }
+    ];
 
-      setOrder(mockOrder);
-      setOrderItems(mockItems);
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    setOrder(mockOrder);
+    setOrderItems(mockItems);
+    setDriverPosition({
+      lat: mockOrder.driver_lat,
+      lng: mockOrder.driver_lng,
+    });
+    setLoading(false);
   }, [orderId]);
+
+  useEffect(() => {
+    if (!order || order.status === "delivered" || order.status === "pending") return;
+
+    const interval = setInterval(() => {
+      setDriverPosition((prev) => {
+        const targetLat = order.delivery_lat || 40.7128;
+        const targetLng = order.delivery_lng || -74.006;
+        
+        const newLat = prev.lat + (targetLat - prev.lat) * 0.01;
+        const newLng = prev.lng + (targetLng - prev.lng) * 0.01;
+        
+        return { lat: newLat, lng: newLng };
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [order]);
 
   const getCurrentStepIndex = () => {
     if (!order) return 0;
@@ -388,7 +397,7 @@ export default function TrackOrderPage() {
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
               <Link href="/">

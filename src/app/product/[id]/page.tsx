@@ -11,16 +11,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/store";
 import { toast } from "sonner";
 import { CursorFollower } from "@/components/CursorFollower";
-import { MOCK_PRODUCTS } from "@/lib/mockData";
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image_url: string;
-  category: string;
-}
+import { MOCK_PRODUCTS, Product } from "@/lib/mockData";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -32,26 +23,24 @@ export default function ProductDetailPage() {
   const { addItem } = useCart();
 
   useEffect(() => {
-    // Simulate fetching product from mock data
-    const timer = setTimeout(() => {
+    function fetchProduct() {
       const foundProduct = MOCK_PRODUCTS.find(p => p.id === id);
-      
+
       if (!foundProduct) {
-        toast.error("Product not found");
-        router.push("/menu");
+        console.error("Product not found");
+        router.push("/#menu");
       } else {
         setProduct(foundProduct);
         
-        const related = MOCK_PRODUCTS
-          .filter(p => p.category === foundProduct.category && p.id !== id)
-          .slice(0, 3);
+        const related = MOCK_PRODUCTS.filter(
+          p => p.category === foundProduct.category && p.id !== id
+        ).slice(0, 3);
         
         setRelatedProducts(related);
       }
       setLoading(false);
-    }, 800);
-
-    return () => clearTimeout(timer);
+    }
+    if (id) fetchProduct();
   }, [id, router]);
 
   const handleAddToCart = () => {
