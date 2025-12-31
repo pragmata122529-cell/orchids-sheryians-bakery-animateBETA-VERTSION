@@ -22,27 +22,30 @@ export const supabase = {
       return { data: { subscription: { unsubscribe: () => {} } } };
     },
   },
-  from: (table: string) => ({
-    select: () => ({
-      eq: () => ({
+    from: (table: string) => {
+      const queryBuilder = {
+        select: () => queryBuilder,
+        eq: () => queryBuilder,
+        neq: () => queryBuilder,
+        lt: () => queryBuilder,
+        lte: () => queryBuilder,
+        gt: () => queryBuilder,
+        gte: () => queryBuilder,
+        like: () => queryBuilder,
+        ilike: () => queryBuilder,
+        is: () => queryBuilder,
+        in: () => queryBuilder,
+        contains: () => queryBuilder,
+        order: () => queryBuilder,
+        limit: () => queryBuilder,
+        range: () => queryBuilder,
         single: async () => createMockResponse(table === "orders" ? { id: "mock-order-1", total_amount: 45, status: "preparing", created_at: new Date().toISOString() } : {}),
-        order: () => ({
-          data: [],
-          error: null,
-        }),
-      }),
-      order: () => ({
-        data: [],
-        error: null,
-      }),
-    }),
-    channel: () => ({
-      on: () => ({
-        subscribe: () => ({}),
-      }),
-    }),
-    removeChannel: () => {},
-  }),
+        maybeSingle: async () => createMockResponse({}),
+        execute: async () => createMockResponse([]),
+        then: (onfulfilled: any) => Promise.resolve(createMockResponse([])).then(onfulfilled),
+      } as any;
+      return queryBuilder;
+    },
   channel: () => ({
     on: () => ({
       subscribe: () => ({}),

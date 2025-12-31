@@ -6,22 +6,6 @@ import ErrorReporter from "@/components/ErrorReporter";
 import Script from "next/script";
 import { Toaster } from "sonner";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta",
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-cormorant",
-});
-
-export const metadata: Metadata = {
-  title: "Home Bakery | Artisan Baked Goods & Sweet Creations",
-  description: "Experience the art of handcrafted baked goods from our home bakery. Fresh daily, made with love.",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className="antialiased font-sans">
         <Script
           id="orchids-browser-logs"
           src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/scripts/orchids-browser-logs.js"

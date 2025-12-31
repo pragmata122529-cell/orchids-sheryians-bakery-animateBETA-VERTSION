@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { MarqueeSection } from "@/components/MarqueeSection";
 import { CursorFollower } from "@/components/CursorFollower";
 import { Preloader } from "@/components/Preloader";
+import { LuxuryTransition } from "@/components/LuxuryTransition";
 
 export default function Home() {
   return (
@@ -17,6 +18,8 @@ export default function Home() {
       <main className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />
         <Hero />
+        
+        <LuxuryTransition />
         
         <MarqueeSection 
           items={["Fresh Baked Daily", "100% Natural Ingredients", "Artisan Chocolate", "Homemade Recipes", "Premium Quality"]}

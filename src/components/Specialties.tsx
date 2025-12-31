@@ -65,41 +65,46 @@ export function Specialties() {
   const x = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
-    <section id="specialties" className="py-32 overflow-hidden relative">
+    <section id="specialties" className="py-32 overflow-hidden relative bg-[#0F0A07]">
       <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A962' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <motion.div
           style={{ x }}
-          className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2"
+          className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2"
         />
         <motion.div
           style={{ x: useTransform(scrollYProgress, [0, 1], [0, 100]) }}
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-caramel/5 rounded-full blur-3xl"
+          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-caramel/10 rounded-full blur-[120px]"
         />
       </div>
 
-      <div ref={ref} className="container mx-auto px-6 mb-16 relative z-10">
+      <div ref={ref} className="container mx-auto px-6 mb-20 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center space-y-4 mb-4"
+          className="text-center space-y-6 mb-4"
         >
-          <motion.span 
-            className="text-sm uppercase tracking-widest text-primary font-semibold inline-block"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            Signature Collection
-          </motion.span>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-[family-name:var(--font-cormorant)] font-bold tracking-tight">
+          <div className="flex items-center justify-center gap-4">
+            <div className="h-[1px] w-8 bg-primary/30" />
+            <motion.span 
+              className="text-sm uppercase tracking-[0.4em] text-primary font-bold inline-block"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              Exquisite Selection
+            </motion.span>
+            <div className="h-[1px] w-8 bg-primary/30" />
+          </div>
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-[family-name:var(--font-cormorant)] font-bold tracking-tight text-cream">
             <motion.span
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="inline-block"
             >
-              Chef's{" "}
+              The{" "}
             </motion.span>
             <motion.span
               initial={{ opacity: 0, y: 50 }}
@@ -107,15 +112,17 @@ export function Specialties() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="inline-block gradient-text italic"
             >
-              Specialties
+              Signature
             </motion.span>
           </h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="h-1 w-24 bg-gradient-to-r from-primary to-caramel mx-auto"
-          />
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.4 }}
+            className="text-muted-foreground/60 text-lg max-w-xl mx-auto font-light"
+          >
+            A curated collection of our most celebrated creations, handcrafted with precision and the world's finest ingredients.
+          </motion.p>
         </motion.div>
       </div>
 
@@ -125,59 +132,56 @@ export function Specialties() {
         transition={{ duration: 1, delay: 0.5 }}
         className="hidden lg:block"
       >
-        <div className="flex gap-6 px-6 pb-8 overflow-x-auto no-scrollbar">
+        <div className="flex gap-10 px-12 pb-12 overflow-x-auto no-scrollbar">
           {specialties.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
-              whileHover={{ y: -15, scale: 1.02 }}
-              className="min-w-[380px] rounded-3xl bg-card border border-primary/10 group cursor-pointer relative overflow-hidden hover:border-primary/30 transition-all duration-500"
+              whileHover={{ y: -20 }}
+              className="min-w-[420px] rounded-[2.5rem] bg-[#1A110B] border border-primary/10 group cursor-pointer relative overflow-hidden hover:border-primary/40 transition-all duration-700 shadow-2xl"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(201,169,98,0.05),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-80 overflow-hidden">
                 <Image
                   src={item.image}
                   alt={item.name}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1A110B] via-transparent to-transparent opacity-60" />
                 
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileHover={{ opacity: 1, x: 0 }}
-                  className="absolute top-4 left-4"
+                  className="absolute top-6 left-6"
                 >
-                  <span className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-xs font-bold uppercase tracking-wider">
+                  <span className="px-6 py-2 bg-primary/90 backdrop-blur-md text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
                     {item.tag}
                   </span>
                 </motion.div>
               </div>
               
-              <div className="relative z-10 p-8 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-[family-name:var(--font-cormorant)] font-bold leading-tight text-foreground group-hover:text-primary transition-colors">
-                    {item.name}
-                  </h3>
-                  <motion.p 
-                    className="text-2xl font-bold gradient-text"
-                    animate={{ scale: [1, 1.05, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    {item.price}
-                  </motion.p>
+              <div className="relative z-10 p-10 space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between">
+                    <h3 className="text-3xl font-[family-name:var(--font-cormorant)] font-bold leading-none text-cream group-hover:text-primary transition-colors duration-500">
+                      {item.name}
+                    </h3>
+                    <p className="text-2xl font-bold gradient-text">
+                      {item.price}
+                    </p>
+                  </div>
+                  <p className="text-muted-foreground/80 font-light leading-relaxed italic">
+                    {item.description}
+                  </p>
                 </div>
-                <p className="text-muted-foreground">{item.description}</p>
                 
-                <motion.div
-                  initial={{ width: 0 }}
-                  whileHover={{ width: "100%" }}
-                  className="h-0.5 bg-gradient-to-r from-primary to-caramel"
-                  transition={{ duration: 0.4 }}
-                />
+                <div className="flex items-center gap-4 group/btn">
+                  <div className="h-[1px] flex-1 bg-primary/10 group-hover:bg-primary/30 transition-colors" />
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-primary/60 group-hover:text-primary transition-colors">Discover</span>
+                  <div className="h-2 w-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors" />
+                </div>
               </div>
             </motion.div>
           ))}

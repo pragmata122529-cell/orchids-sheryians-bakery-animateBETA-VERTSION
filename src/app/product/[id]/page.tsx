@@ -176,7 +176,7 @@ export default function ProductDetailPage() {
               >
                 <p>{product.description}</p>
                 <p>
-                  Experience the perfect balance of flavors with our handcrafted {product.name.toLowerCase()}. 
+                  Experience the perfect balance of flavors with our handcrafted {product.name?.toLowerCase() || "item"}. 
                   Made with premium organic ingredients and baked fresh in our artisan kitchen every morning.
                 </p>
               </motion.div>
