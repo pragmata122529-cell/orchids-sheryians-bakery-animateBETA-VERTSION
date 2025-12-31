@@ -126,15 +126,14 @@ const ProductCard3D = ({ product, index, onAddToCart }: { product: Product; inde
         
         <div className="relative p-6 space-y-4" style={{ transform: "translateZ(30px)" }}>
           <div className="flex justify-between items-start gap-3">
-              <div className="space-y-2">
-                <h3 className="text-xl font-[family-name:var(--font-playfair)] font-bold uppercase tracking-wide text-foreground group-hover:text-primary transition-colors duration-300">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed italic font-light">
-                  {product.description}
-                </p>
-              </div>
-
+            <div className="space-y-2">
+              <h3 className="text-xl font-black uppercase tracking-wide text-foreground group-hover:text-primary transition-colors duration-300">
+                {product.name}
+              </h3>
+              <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                {product.description}
+              </p>
+            </div>
             <motion.div
               animate={{ scale: isHovered ? [1, 1.1, 1] : 1 }}
               transition={{ duration: 0.5, repeat: isHovered ? Infinity : 0 }}

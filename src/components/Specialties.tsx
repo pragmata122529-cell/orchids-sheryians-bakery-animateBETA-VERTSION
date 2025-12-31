@@ -85,47 +85,36 @@ export function Specialties() {
           transition={{ duration: 0.8 }}
           className="text-center space-y-6 mb-4"
         >
-            <div className="flex items-center justify-center gap-4">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={isInView ? { width: "2rem" } : {}}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="h-[1px] bg-primary/30" 
-              />
-              <motion.span 
-                className="text-sm uppercase tracking-[0.4em] text-primary font-bold inline-block font-[family-name:var(--font-playfair)]"
-                initial={{ opacity: 0, letterSpacing: "0.2em" }}
-                animate={isInView ? { opacity: 1, letterSpacing: "0.4em" } : {}}
-                transition={{ duration: 1, delay: 0.1 }}
-              >
-                Exquisite Selection
-              </motion.span>
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={isInView ? { width: "2rem" } : {}}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="h-[1px] bg-primary/30" 
-              />
-            </div>
-            <h2 className="text-5xl md:text-7xl lg:text-9xl font-[family-name:var(--font-playfair)] font-bold tracking-tight text-cream">
-              <motion.span
-                initial={{ opacity: 0, y: 100, rotateX: 45 }}
-                animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-                transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block"
-              >
-                The{" "}
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 100, rotateX: 45 }}
-                animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-                transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block gradient-text italic"
-              >
-                Signature
-              </motion.span>
-            </h2>
-
+          <div className="flex items-center justify-center gap-4">
+            <div className="h-[1px] w-8 bg-primary/30" />
+            <motion.span 
+              className="text-sm uppercase tracking-[0.4em] text-primary font-bold inline-block"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              Exquisite Selection
+            </motion.span>
+            <div className="h-[1px] w-8 bg-primary/30" />
+          </div>
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-[family-name:var(--font-cormorant)] font-bold tracking-tight text-cream">
+            <motion.span
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-block"
+            >
+              The{" "}
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="inline-block gradient-text italic"
+            >
+              Signature
+            </motion.span>
+          </h2>
           <motion.p
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
@@ -143,70 +132,60 @@ export function Specialties() {
         transition={{ duration: 1, delay: 0.5 }}
         className="hidden lg:block"
       >
-          <div className="flex gap-10 px-12 pb-12 overflow-x-auto no-scrollbar">
-            {specialties.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9, y: 50 }}
-                animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-                transition={{ delay: 0.3 + i * 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -20, scale: 1.02 }}
-                className="min-w-[420px] rounded-[2.5rem] bg-[#1A110B] border border-primary/10 group cursor-pointer relative overflow-hidden transition-all duration-700 shadow-2xl luxury-shadow"
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(201,169,98,0.08),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="flex gap-10 px-12 pb-12 overflow-x-auto no-scrollbar">
+          {specialties.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
+              whileHover={{ y: -20 }}
+              className="min-w-[420px] rounded-[2.5rem] bg-[#1A110B] border border-primary/10 group cursor-pointer relative overflow-hidden hover:border-primary/40 transition-all duration-700 shadow-2xl"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(201,169,98,0.05),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <div className="relative h-80 overflow-hidden">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1A110B] via-transparent to-transparent opacity-60" />
                 
-                <div className="corner-light animate-corner-light" />
-                
-                <div className="relative h-80 overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0 contrast-[1.1]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A110B] via-transparent to-transparent opacity-60" />
-                  
-                  <motion.div
-                    className="absolute top-6 left-6 z-20"
-                  >
-                    <span className="px-6 py-2 bg-primary/90 backdrop-blur-md text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-xl">
-                      {item.tag}
-                    </span>
-                  </motion.div>
-                </div>
-                
-                <div className="relative z-10 p-10 space-y-6">
-                  <div className="space-y-2">
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="text-4xl font-[family-name:var(--font-playfair)] font-bold leading-[1.1] text-cream group-hover:text-primary transition-colors duration-500">
-                        {item.name}
-                      </h3>
-                      <p className="text-3xl font-bold gradient-text shrink-0">
-                        {item.price}
-                      </p>
-                    </div>
-                    <p className="text-muted-foreground/80 font-light leading-relaxed italic text-lg">
-                      {item.description}
+                <motion.div
+                  className="absolute top-6 left-6"
+                >
+                  <span className="px-6 py-2 bg-primary/90 backdrop-blur-md text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
+                    {item.tag}
+                  </span>
+                </motion.div>
+              </div>
+              
+              <div className="relative z-10 p-10 space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between">
+                    <h3 className="text-3xl font-[family-name:var(--font-cormorant)] font-bold leading-none text-cream group-hover:text-primary transition-colors duration-500">
+                      {item.name}
+                    </h3>
+                    <p className="text-2xl font-bold gradient-text">
+                      {item.price}
                     </p>
                   </div>
-                  
-                  <div className="flex items-center gap-4 group/btn overflow-hidden">
-                    <motion.div 
-                      className="h-[1px] flex-1 bg-primary/10 group-hover:bg-primary/40 transition-colors"
-                      whileHover={{ scaleX: 1.1 }}
-                    />
-                    <span className="text-[11px] uppercase tracking-[0.4em] text-primary/60 group-hover:text-primary transition-all duration-500 font-bold">Discover</span>
-                    <motion.div 
-                      className="h-2 w-2 rounded-full bg-primary/20 group-hover:bg-primary transition-all duration-500"
-                      animate={{ scale: [1, 1.5, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  </div>
+                  <p className="text-muted-foreground/80 font-light leading-relaxed italic">
+                    {item.description}
+                  </p>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-
+                
+                <div className="flex items-center gap-4 group/btn">
+                  <div className="h-[1px] flex-1 bg-primary/10 group-hover:bg-primary/30 transition-colors" />
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-primary/60 group-hover:text-primary transition-colors">Discover</span>
+                  <div className="h-2 w-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
 
       <div className="lg:hidden px-6">
