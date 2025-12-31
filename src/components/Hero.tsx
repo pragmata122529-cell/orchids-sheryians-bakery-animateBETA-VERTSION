@@ -257,30 +257,31 @@ export function Hero() {
                 </span>
               </motion.div>
 
-              <div className="space-y-2 overflow-hidden">
-                <h1 className="font-[family-name:var(--font-cormorant)] text-6xl md:text-7xl lg:text-8xl xl:text-[10rem] font-bold tracking-tight leading-[0.85]">
-                  <div className="overflow-hidden pb-2">
-                    <GlitchText delay={0.3}>Home</GlitchText>
-                  </div>
-                  <div className="overflow-hidden">
-                    <motion.span
-                      initial={{ y: "100%", rotateX: -45 }}
-                      animate={{ y: 0, rotateX: 0 }}
-                      transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                      className="inline-block"
-                    >
-                      <span className="gradient-text italic relative">
-                        Bakery
-                        <motion.span
-                          className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary via-caramel to-primary"
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ duration: 1, delay: 1.2 }}
-                        />
-                      </span>
-                    </motion.span>
-                  </div>
-                </h1>
+                <div className="space-y-2 overflow-hidden">
+                  <h1 className="font-[family-name:var(--font-playfair)] text-6xl md:text-7xl lg:text-8xl xl:text-[10rem] font-black tracking-tight leading-[0.8]">
+                    <div className="overflow-hidden pb-4">
+                      <GlitchText delay={0.3}>Home</GlitchText>
+                    </div>
+                    <div className="overflow-hidden">
+                      <motion.span
+                        initial={{ y: "100%", rotateX: -45 }}
+                        animate={{ y: 0, rotateX: 0 }}
+                        transition={{ duration: 1.5, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="inline-block"
+                      >
+                        <span className="gradient-text italic relative pr-4">
+                          Bakery
+                          <motion.span
+                            className="absolute -bottom-4 left-0 w-full h-2 bg-gradient-to-r from-primary via-caramel to-primary"
+                            initial={{ scaleX: 0 }}
+                            animate={{ scaleX: 1 }}
+                            transition={{ duration: 1.2, delay: 1.5 }}
+                          />
+                        </span>
+                      </motion.span>
+                    </div>
+                  </h1>
+
                 
                 <motion.div
                   initial={{ scaleX: 0 }}
@@ -585,17 +586,18 @@ export function Hero() {
                   <span className="text-primary font-bold uppercase tracking-[0.3em] text-sm">Limited Time Offer</span>
                 </motion.div>
 
-                <motion.h2
-                  initial={{ y: 50, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                  className="text-5xl md:text-7xl lg:text-8xl font-[family-name:var(--font-cormorant)] font-bold"
-                >
-                  <span className="text-foreground">New Year</span>
-                  <br />
-                  <span className="gradient-text italic">Special</span>
-                </motion.h2>
+                  <motion.h2
+                    initial={{ y: 50, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 }}
+                    className="text-5xl md:text-7xl lg:text-9xl font-[family-name:var(--font-playfair)] font-bold tracking-tight"
+                  >
+                    <span className="text-foreground">New Year</span>
+                    <br />
+                    <span className="gradient-text italic">Special</span>
+                  </motion.h2>
+
 
                 <motion.p
                   initial={{ y: 30, opacity: 0 }}

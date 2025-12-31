@@ -101,46 +101,53 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <Link href="/dashboard">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="rounded-full hover:bg-secondary gap-2 text-muted-foreground hover:text-foreground"
+            <div className="hidden md:flex items-center gap-3">
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <Link href="/dashboard">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="rounded-full hover:bg-secondary gap-2 text-muted-foreground hover:text-foreground"
+                    >
+                      <Package size={18} />
+                      <span className="hidden lg:inline">Orders</span>
+                    </Button>
+                  </Link>
+                  <Link href="/profile">
+                    <motion.div 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full border border-primary/10 cursor-pointer hover:border-primary/40 transition-colors"
+                    >
+                      <div className="w-7 h-7 bg-gradient-to-br from-primary to-caramel rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold uppercase">
+                        {user.email?.[0]}
+                      </div>
+                      <span className="text-xs font-medium text-foreground truncate max-w-[80px]">
+                        {user.email?.split('@')[0]}
+                      </span>
+                    </motion.div>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="rounded-full hover:bg-destructive/10 hover:text-destructive w-9 h-9"
+                    onClick={handleLogout}
                   >
-                    <Package size={18} />
-                    <span className="hidden lg:inline">Orders</span>
+                    <LogOut size={18} />
                   </Button>
-                </Link>
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full border border-primary/10">
-                  <div className="w-7 h-7 bg-gradient-to-br from-primary to-caramel rounded-full flex items-center justify-center text-xs text-primary-foreground font-bold uppercase">
-                    {user.email?.[0]}
-                  </div>
-                  <span className="text-xs font-medium text-foreground truncate max-w-[80px]">
-                    {user.email?.split('@')[0]}
-                  </span>
                 </div>
+              ) : (
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="rounded-full hover:bg-destructive/10 hover:text-destructive w-9 h-9"
-                  onClick={handleLogout}
+                  className="rounded-full hover:bg-secondary w-10 h-10"
+                  onClick={() => setIsAuthOpen(true)}
                 >
-                  <LogOut size={18} />
+                  <User size={20} className="text-muted-foreground" />
                 </Button>
-              </div>
-            ) : (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full hover:bg-secondary w-10 h-10"
-                onClick={() => setIsAuthOpen(true)}
-              >
-                <User size={20} className="text-muted-foreground" />
-              </Button>
-            )}
+              )}
+
             
             <Button 
               variant="ghost" 

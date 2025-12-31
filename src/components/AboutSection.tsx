@@ -136,15 +136,16 @@ export function AboutSection() {
                 <span className="text-sm uppercase tracking-[0.2em] text-primary font-bold">Our Story</span>
               </motion.div>
               
-              <motion.h2
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-[family-name:var(--font-cormorant)] font-bold leading-tight"
-              >
-                Baking <span className="gradient-text italic">Happiness</span>
-                <br />Since 1980
-              </motion.h2>
+                <motion.h2
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  className="text-4xl md:text-5xl lg:text-7xl font-[family-name:var(--font-playfair)] font-bold leading-tight"
+                >
+                  Baking <span className="gradient-text italic">Happiness</span>
+                  <br />Since 1980
+                </motion.h2>
+
               
               <motion.div
                 initial={{ scaleX: 0 }}
