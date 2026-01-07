@@ -109,11 +109,11 @@ export default function TrackingMap({ bakeryPos, deliveryPos, driverPos, status 
         {status !== "delivered" && (
           <Marker position={currentDriver} icon={truckIcon} />
         )}
-
-        {/* Custom Overlays for Aesthetic */}
-        <div className="absolute inset-0 pointer-events-none border-[12px] border-[#0F0A07] z-[1000]" />
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#0F0A07] via-transparent to-[#0F0A07] opacity-40 z-[999]" />
       </MapContainer>
+
+      {/* Custom Overlays for Aesthetic - Moved OUTSIDE MapContainer */}
+      <div className="absolute inset-0 pointer-events-none border-[12px] border-[#0F0A07] z-[1000]" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#0F0A07] via-transparent to-[#0F0A07] opacity-40 z-[999]" />
 
       <style jsx global>{`
         .leaflet-container {
